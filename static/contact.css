@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+body {
+    background: #070b1d;
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: white;
+}
+
+.container {
+    max-width: 900px;
+    width: 60%;
+    margin: 0 auto;
+    background-color: #f94ca4;
+    padding: 20px;
+    border-radius: 8px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+    margin-top: 20px;
+    margin-bottom: 240px;
+    color: white;
+}
+
+h1 {
+    text-align: center;
+}
+
+p {
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.email-block {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.email-block:hover {
+    transform: scale(1.1); /* Slightly enlarges the icon/image */
+    color: white; /* Change text color on hover */
+}
+
+.email-block img {
+    transition: transform 0.3s ease;
+}
+
+.email-block i {
+    font-size: 2rem;
+    margin-right: 10px;
+}
+
+.email-block:hover img {
+    transform: scale(1.1); /* Slightly enlarges the image on hover */
+}
+
+.footer {
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+    background-color: #070b1d;
+    font-size: 14px;
+    border-top: 1px solid #ddd;
+    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer a {
+    color: white;
+    margin: 0 10px;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #f94ca4; /* Highlight color on hover */
+}
+
+.footer .social-icons {
+    margin-top: 10px;
+}
+
+.footer .social-icons i {
+    margin: 0 15px;
+}
+
+.footer .social-icons {
+    font-size: 2rem;
+}
+
+@media (max-width: 991px) {
+    .sidebar {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+    }
+}

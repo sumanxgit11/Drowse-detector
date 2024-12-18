@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+:root {
+    --background-color: white;
+    --base-variant: #e8e9ed;
+    --text-color: #111528;
+    --secondary-text: #232738;
+    --primary-color: #3a435d;
+    --accent-color: #0071ff;
+    --footer-bg-color: #f8f9fa;
+}
+
+.darkmode {
+    --background-color: #070b1d;
+    --base-variant: #101425;
+    --text-color: #ffffff;
+    --secondary-text: #a4a5b8;
+    --primary-color: #3a435d;
+    --accent-color: #0071ff;
+    --footer-bg-color: #070b1d;
+}
+
+body {
+    background: #070b1d;
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+#videoFeed {
+    margin: 20px auto;
+    display: block;
+    max-width: 50%;
+    height: auto;
+    border: 5px solid white; /* Fixed light mode color */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#toggleButton {
+    background-color: #f94ca4; /* Fixed light mode color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#toggleButton:hover {
+    background-color: white;
+    color: #f94ca4;
+    transform: scale(1.1);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+footer {
+    margin-top: 20px;
+    background-color: #070b1d;
+    color: white;
+    font-size: 14px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
+}
+#ldf {
+    margin-top: revert;
+    margin-bottom: .5rem;
+    line-height: 1.2;
+    color: var(--bs-heading-color);
+    font-weight: 1000;
+    font-size: revert;
+    color: white;
+}
+
+#date-time {
+    width: 157px;
+    font-size: 1em;
+    background-color: #f94ca4;
+    color: white;
+    border-radius: 11px;
+    text-align: center;
+  }
+
+@media (max-width: 991px) {
+    .sidebar {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+    }
+}

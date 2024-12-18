@@ -1,0 +1,123 @@
+from flask import Flask, Response, jsonify, render_template
+import cv2
+import numpy as np
+import dlib
+from imutils import face_utils
+import pygame
+
+app = Flask(__name__)
+
+def find_camera():
+    for i in range(10):  # Test 0-9 as possible indices
+        cap = cv2.VideoCapture(i)
+        if cap.isOpened():
+            print(f"Camera found at index: {i}")
+            return cap  # Return the open camera object
+        cap.release()
+    return None
+def drowsiness_detection():
+    # Initialize the camera and capture instance
+    cap = find_camera()
+
+    # Initialize the face detector and landmark detector
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+
+    # Status counters and variables
+    sleep = 0
+    drowsy = 0
+    active = 0
+    status = ""
+    color = (0, 0, 0)
+
+    def compute(ptA, ptB):
+        return np.linalg.norm(ptA - ptB)
+
+    def blinked(a, b, c, d, e, f):
+        up = compute(b, d) + compute(c, e)
+        down = compute(a, f)
+        ratio = up / (2.0 * down)
+
+        if ratio > 0.25:
+            return 2  # Active
+        elif 0.21 < ratio <= 0.25:
+            return 1  # Drowsy
+        else:
+            return 0  # Sleeping
+
+    pygame.mixer.init()
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = detector(gray)
+
+        for face in faces:
+            x1, y1 = face.left(), face.top()
+            x2, y2 = face.right(), face.bottom()
+
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            landmarks = predictor(gray, face)
+            landmarks = face_utils.shape_to_np(landmarks)
+
+            left_blink = blinked(landmarks[36], landmarks[37], landmarks[38], landmarks[41], landmarks[40], landmarks[39])
+            right_blink = blinked(landmarks[42], landmarks[43], landmarks[44], landmarks[47], landmarks[46], landmarks[45])
+
+            if left_blink == 0 or right_blink == 0:
+                sleep += 1
+                drowsy = 0
+                active = 0
+                if sleep > 6:
+                    sound = pygame.mixer.Sound("beep-06.wav")
+                    sound.play()
+                    status = "SLEEPING !!!"
+                    color = (255, 0, 0)
+
+            elif left_blink == 1 or right_blink == 1:
+                sleep = 0
+                active = 0
+                drowsy += 1
+                if drowsy > 3:
+                    sound = pygame.mixer.Sound("beep-06.wav")
+                    sound.play()
+                    status = "Drowsy !"
+                    color = (0, 0, 255)
+
+            else:
+                drowsy = 0
+                sleep = 0
+                active += 1
+                if active > 6:
+                    status = "Active :)"
+                    color = (0, 255, 0)
+
+            cv2.putText(frame, status, (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
+
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+@app.route('/')
+def home():
+    """Serve the home page."""
+    return render_template('home.html')
+
+@app.route('/drowsiness', methods=['GET'])
+def detect_drowsiness():
+    """Endpoint to start the drowsiness detection."""
+    return Response(drowsiness_detection(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/status', methods=['GET'])
+def api_status():
+    """Endpoint to check API status."""
+    return jsonify({"status": "API is running"})
+
+if __name__ == "__main__":
+    app.run(debug=True)
